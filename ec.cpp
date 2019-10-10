@@ -91,7 +91,7 @@ class EcElement : public EC {
 		}
 		
 		//https://tools.ietf.org/html/rfc6090#appendix-F.1
-		EcElement operator*(EcElement const &ece2){
+		EcElement operator+(EcElement const &ece2){
 			assert( p==ece2.getCharacteristic() 
 					&& a==ece2.getCurveA()
 					&& b==ece2.getCurveB());
@@ -113,19 +113,23 @@ class EcElement : public EC {
 				x3 = -1;
 				y3 = -1;
 			}
-			else if(!this->isEqual(ece2) && x1!=x2){
-				int temp = ( ( (ll)(y2-y1) * (ll)inv(x2-x1, p))%p + (ll)p)%p;
-				x3 = ( ((ll)temp * (ll) temp - (ll)x1 - (ll)x2)%p + (ll)p)%p;
-				y3 = (((((ll)(x1-x3)*(ll)(y2-y1))%p*(ll)inv(x2-x1, p))%p - y1)%p + p)%p;
-			}
 			else if(this->isEqual(ece2)&&this->isPointAtInfinity()){
 				x3 = -1;
 				y3 = -1;
 			}
-			else{ // equal. and not point at infinity
-				int temp = (((3LL*((ll)x1*(ll)x1)%p)%p + a)%p * (ll)inv(2*y1, p))%p;
-				x3 = ((((ll)temp * (ll)temp)%p - 2LL*(ll)x1)%p+(ll)p)%p;
-				y3 = ((((ll)(x1-x3)*(((3LL*(ll)x1)%p*(ll)x1)%p + (ll)a) * (ll)inv(2*y1, p))%p - y)%p + p) %p;
+			else if(!this->isEqual(ece2)){
+				int slope; // as interpreted in the elliptic curves over reals. slope of tangent if x1 == x2				
+				if(x1!=x2){
+					slope = ( ( (ll)(y2-y1) * (ll)inv(x2-x1, p))%p + (ll)p)%p;
+				}
+				else{ // equal. and not point at infinity
+					slope = (((3LL*((ll)x1*(ll)x1)%p)%p + (ll)a)%p * (ll)inv(2*y1, p))%p;
+				}
+				
+				int slope_squared = ((ll)slope * (ll)slope)%p;
+
+				x3 = (      ( (ll)slope_squared - (ll)x1 - (ll)x2)%p     + (ll)p)%p;
+				y3 = (    (((ll)slope * (ll)(x1 - x3) )%p - (ll)y1)%p    + (ll)p)%p;			
 			}
 			EcElement ret(x3, y3, a, b, p);
 			return ret;

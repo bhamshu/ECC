@@ -30,7 +30,7 @@ int main(){
 	EllipticCurve curve(ec);
 	EcElement p0 = curve.getEcPoint(2, 4);
 	EcElement p1(3, 5, ec);
-	EcElement p2 = p0*p1;
+	EcElement p2 = p0 + p1;
 	show(p0); std::cout<<" * ";
 	show(p1); std::cout<<" = ";
 	show(p2);

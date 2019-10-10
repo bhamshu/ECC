@@ -60,7 +60,7 @@ class EcElement : public EC {
 			this->y = y;
 			assert(isBelong(x, y));
 		}
-		EcElement(int x, int y, EC &curve) : EC(curve){
+		EcElement(int x, int y, const EC &curve) : EC(curve){
 			this->x = x;
 			this->y = y;
 			assert(isBelong(x, y));
@@ -87,54 +87,13 @@ class EcElement : public EC {
 			EcElement ret(x, (p-y)%p, a, b, p);
 			return ret;
 		}
-		
-		// May refer https://tools.ietf.org/html/rfc6090#appendix-F.1 for testing
-		// Current implementation is by my understanding
-		EcElement operator+(EcElement const &ece2){
-			assert( p==ece2.getCharacteristic() 
-					&& a==ece2.getCurveA()
-					&& b==ece2.getCurveB());
-
-			int x3, y3;
-			int x1 = x, y1 = y;
-			int x2 = ece2.getEcElementX(),
-				 y2 = ece2.getEcElementY();
-
-			if(this->isPointAtInfinity()){
-				x3 = x2;
-				y3 = y2;
-			}
-			else if(ece2.isPointAtInfinity()){
-				x3 = x1;
-				y3 = y1;
-			}
-			else if(!this->isEqual(ece2)){
-				if(x1!=x2){
-					int slope = ( ( (ll)(y2-y1) * (ll)inv(x2-x1, p))%p + (ll)p)%p;
-					int slope_squared = ((ll)slope * (ll)slope)%p;
-					x3 = (      ( (ll)slope_squared - (ll)x1 - (ll)x2)%p     + (ll)p)%p;
-					y3 = (    (((ll)slope * (ll)(x1 - x3) )%p - (ll)y1)%p    + (ll)p)%p;
-				}
-				else{ // when x1 = x2. line is parallel to y-axis. 
-					x3 = -1;
-					y3 = -1;
-				}
-			}
-			else{ // equal. 
-				if(y1!=0){ //equal so y2!=0 too.
-					int slope = (((3LL*((ll)x1*(ll)x1)%p)%p + (ll)a)%p * (ll)inv(2*y1, p))%p;
-					int slope_squared = ((ll)slope * (ll)slope)%p;
-					x3 = (      ( (ll)slope_squared - (ll)x1 - (ll)x2)%p     + (ll)p)%p;
-					y3 = (    (((ll)slope * (ll)(x1 - x3) )%p - (ll)y1)%p    + (ll)p)%p;
-				}
-				else{ //equal and y = 0 so tangent at the bell of the curve
-					x3 = -1;
-					y3 = -1;
-				}
-			}
-			EcElement ret(x3, y3, a, b, p);
-			return ret;
+		EC getCurve() const{
+			EC ec(a, b, p);
+			return ec;
 		}
+		EcElement operator+(EcElement const &ece2);
+		bool operator==(const EcElement &ece2);
+
 };
 
 class EllipticCurve : public EC {
@@ -146,4 +105,74 @@ class EllipticCurve : public EC {
 			EcElement ret(x, y, a, b, p);
 			return ret;
 		}
+		EcElement getPointAtInfinity(){
+			EcElement ret(-1, -1, a, b, p);
+			return ret;
+		}
 };
+
+
+// May refer https://tools.ietf.org/html/rfc6090#appendix-F.1 for testing
+// Current implementation is by my understanding
+EcElement EcElement::operator+(EcElement const &ece2){
+	assert( p==ece2.getCharacteristic() 
+			&& a==ece2.getCurveA()
+			&& b==ece2.getCurveB());
+
+	int x3, y3;
+	int x1 = x, y1 = y;
+	int x2 = ece2.getEcElementX(),
+		 y2 = ece2.getEcElementY();
+
+	if(this->isPointAtInfinity()){
+		x3 = x2;
+		y3 = y2;
+	}
+	else if(ece2.isPointAtInfinity()){
+		x3 = x1;
+		y3 = y1;
+	}
+	else if(!this->isEqual(ece2)){
+		if(x1!=x2){
+			int slope = ( ( (ll)(y2-y1) * (ll)inv(x2-x1, p))%p + (ll)p)%p;
+			int slope_squared = ((ll)slope * (ll)slope)%p;
+			x3 = (      ( (ll)slope_squared - (ll)x1 - (ll)x2)%p     + (ll)p)%p;
+			y3 = (    (((ll)slope * (ll)(x1 - x3) )%p - (ll)y1)%p    + (ll)p)%p;
+		}
+		else{ // when x1 = x2. line is parallel to y-axis. 
+			x3 = -1;
+			y3 = -1;
+		}
+	}
+	else{ // equal. 
+		if(y1!=0){ //equal so y2!=0 too.
+			int slope = (((3LL*((ll)x1*(ll)x1)%p)%p + (ll)a)%p * (ll)inv(2*y1, p))%p;
+			int slope_squared = ((ll)slope * (ll)slope)%p;
+			x3 = (      ( (ll)slope_squared - (ll)x1 - (ll)x2)%p     + (ll)p)%p;
+			y3 = (    (((ll)slope * (ll)(x1 - x3) )%p - (ll)y1)%p    + (ll)p)%p;
+		}
+		else{ //equal and y = 0 so tangent at the bell of the curve
+			x3 = -1;
+			y3 = -1;
+		}
+	}
+	EcElement ret(x3, y3, a, b, p);
+	return ret;
+}
+
+EcElement operator*(int k,  const EcElement &ece){
+	if(k==0){
+		EcElement ec(-1, -1, ece.getCurve());
+		return ec; 
+	}
+	EcElement ecesqrt = (k/2)*ece;
+	EcElement ret = ecesqrt + ecesqrt;
+	if(k%2==1){
+		ret = ret + ece;
+	} 
+	return ret;
+}
+
+bool EcElement::operator==(const EcElement &ece2){
+	return this->isEqual(ece2);
+}

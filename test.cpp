@@ -32,8 +32,8 @@ int main(){
 	EcElement p0 = curve.getEcPoint(2, 4);
 	EcElement p1(3, 5, ec);
 	EcElement p2 = p0 + p1;
-	assert(p2.isEqual(curve.getEcPoint(7, 2)));
-	show(p0); std::cout<<" * ";
+	//assert(p2.isEqual(curve.getEcPoint(7, 2)));
+	show(p0); std::cout<<" + ";
 	show(p1); std::cout<<" = ";
 	show(p2);
 	std::cout<<"  [y^2 = x^3+x+6 (mod 11)]\n";

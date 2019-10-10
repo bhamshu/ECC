@@ -1,3 +1,4 @@
+// TODO: Use GMP and use 160 bit primes for guaranteeing 128-bit security. Btw !!CAUTION!! in this current version everything is designed to work in 32 bits, so it's not really secure for any real scenario.
 // https://tools.ietf.org/html/rfc6090
 
 #define FIELD_CPP
@@ -26,6 +27,7 @@ class Field{
 	public:
 		Field(int p){
 			this->p = p;
+			//assert(isPrime(p));
 		}
 		int getCharacteristic() const{
 			return p;
@@ -40,12 +42,12 @@ class FieldElement : public Field{
 		FieldElement(int x, int p) : Field(p){
 			this->x = x; 
 			assert(x<p);
-			assert(isPrime(p));
+			//assert(isPrime(p));
 		}
 		FieldElement(int x, Field f) : Field(f){
 			this->x = x; 
 			assert(x<p);
-			assert(isPrime(p));
+			//assert(isPrime(p));
 		}
 
 		int getValue() const{

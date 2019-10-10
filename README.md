@@ -7,4 +7,6 @@ This library implements operations over finite fields(of prime charecteristic on
 Soon,I will be adding cryptographic algorithms like Diffie-Hellman key exchange over elliptic curves and other algorithms as I study them. Contributions are welcome!
 
 **A word of caution:**
-As of now, I have designed it to work for 32-bit integers which is very very low for any real world cryptographic purposes.  I plan to use [GMP](https://gmplib.org/) in future updates so as to support standard 160/192 bit versions.  
+As of now, I have designed it to work for 32-bit integers which is very very low for any real world cryptographic purposes.  I plan to use [GMP](https://gmplib.org/) in future updates so as to support standard 160/192 bit versions. 
+
+*PS. Feel free to contact me (shubhamdtu20@gmail.com) for support, I'll be glad to help. Please drop a word if you use it to let me know that you found it helpful.*

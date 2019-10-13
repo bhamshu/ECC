@@ -12,9 +12,6 @@ typedef mpz_class mzc;
 	#include "field.cpp" //ec
 #endif
 
-#ifndef UTILITIES_CPP
-	#include "utilities.cpp"
-#endif
 
 class EcElement;
 

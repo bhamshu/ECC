@@ -45,7 +45,7 @@ class FieldElement : public Field{
 		FieldElement(){
 		}
 		template<class T>
-		FieldElement(const T &x, const T &p) : Field(p){
+		FieldElement(T x, T p) : Field(p){
 			if(p==-1){
 				assert(x==-1);
 			}
@@ -56,7 +56,7 @@ class FieldElement : public Field{
 			}
 		}
 		template<class T>
-		FieldElement(const T &x, const Field &f) : Field(f){
+		FieldElement(T x, Field f) : Field(f){
 			if(p==-1){
 				assert(x==-1);
 			}
@@ -87,7 +87,7 @@ class FieldElement : public Field{
 			FieldElement ret( ((x- f2.getValue())%p + p)%p, p);
 			return ret;
  		}
- 		FieldElement operator/(FieldElement const &f2){
+ 		FieldElement operator/(FieldElement f2){
 			assert( p == f2.getCharacteristic() );
 			FieldElement ret = (*this) * inv(f2);
 			return ret;

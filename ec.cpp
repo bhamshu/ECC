@@ -22,14 +22,14 @@ class EllipticCurve: public Field { //elliptic curve
 		INT_P a, b; // y^2 = x^3 + a*x + b;
 	public:
 		EllipticCurve(){}
-		EllipticCurve(const INT_P &a_arg, const INT_P &b_arg, const Field& f_arg) : Field(f_arg), a(a_arg), b(b_arg){ 
+		EllipticCurve(INT_P a_arg, INT_P b_arg, Field f_arg) : Field(f_arg), a(a_arg), b(b_arg){ 
 			assert(a.getValue() < p); 
 			assert(b.getValue() < p);
 			assert(this->getDiscriminant().getValue()!=mzc(0));	
 		}
 
 		template<class T, class F> // T can be int/long/mpz_class.  F can be all these or a field 
-		EllipticCurve(const T &a_arg, const T &b_arg, const F& f_arg) 
+		EllipticCurve(T a_arg, T b_arg, F f_arg) 
 									: Field(f_arg), 
 										a( getFieldElement(a_arg, f_arg) ), 
 										b( getFieldElement(b_arg, f_arg) ){ 
@@ -81,7 +81,7 @@ class EcElement : public EllipticCurve{
 		EcElement(){}
 
 		template<class F> // F can be field or int/long/mpz_class
-		EcElement( const INT_P& x_arg, const INT_P& y_arg, const INT_P& a, const INT_P& b, const F& p) 
+		EcElement( INT_P x_arg, INT_P y_arg, INT_P a, INT_P b, F p) 
 																		: EllipticCurve(a, b, p), x(x_arg), y(y_arg){
 			point_at_infinity = false;
 			assert(isBelong(x, y));
@@ -95,14 +95,14 @@ class EcElement : public EllipticCurve{
 			assert(isBelong(x, y));
 		}
 
-		EcElement(const INT_P& x_arg, const INT_P& y_arg, const EllipticCurve& curve) 
+		EcElement(INT_P x_arg, INT_P y_arg, EllipticCurve curve) 
 																		: EllipticCurve(curve), x(x_arg), y(y_arg){
 			point_at_infinity = false;
 			assert(isBelong(x, y));
 		}
 
 		template<class T>
-		EcElement(const  T& x_arg, const T& y_arg, const EllipticCurve& curve) 
+		EcElement(T x_arg, T y_arg, EllipticCurve curve) 
 														: EllipticCurve(curve), 
 															x(x_arg, curve.getCharacteristic()), 
 															y(y_arg, curve.getCharacteristic()){
@@ -110,7 +110,7 @@ class EcElement : public EllipticCurve{
 			assert(isBelong(x, y));
 		}
 		
-		EcElement(const EllipticCurve& curve):EllipticCurve(curve){
+		EcElement(EllipticCurve curve):EllipticCurve(curve){
 			point_at_infinity = true;
 		}
 
@@ -145,6 +145,11 @@ class EcElement : public EllipticCurve{
 			return this->isEqual(ece2);
 		}
 };
+
+std::ostream & operator<<(std::ostream &out, EcElement e){
+	out<<"("<<e.getEcElementX()<<", "<<e.getEcElementY()<<")";
+	return out;
+}
 
 template<typename T>
 EcElement EllipticCurve::getEcPoint(T x, T y){

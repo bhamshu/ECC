@@ -14,10 +14,6 @@
 
 typedef EcElement Point;
 
-void show(const EcElement &e){
-	std::cout<<"("<<e.getEcElementX()<<", "<<e.getEcElementY()<<")";
-}
-
 int main(){
 	Field p11(11);
 	FieldElement f1(6, p11), f2(7, 11);
@@ -29,9 +25,8 @@ int main(){
 	EcElement p0 = curve.getEcPoint(2, 4);
 	EcElement p1(mpz_class(3), mpz_class(5), curve);
 	EcElement p2(p0 + p1);
-	show(p0); std::cout<<" + ";
-	show(p1); std::cout<<" = ";
-	show(p2);
+	std::cout<<p0<<" + "<<p1;
+	std::cout<<" = "<<p2;
 	std::cout<<"  [y^2 = x^3+x+6 (mod 11)]\n";
 	assert(p2 == curve.getEcPoint(7, 2));
 	
@@ -57,7 +52,10 @@ int main(){
 
 	EllipticCurve P256curve = getP256Curve();
 	std::cout<<(P256curve.getCurveA())<<"\n"<<P256curve.getCurveB()<<"\n";
-
+	EcElement genP256(mpz_class("6B17D1F2E12C4247F8BCE6E563A440F277037D812DEB33A0F4A13945D898C296", 16),	
+						mpz_class("4FE342E2FE1A7F9B8EE7EB4A7C0F9E162BCE33576B315ECECBB6406837BF51F5", 16), P256curve);
+	std::cout<<(9451/*random*/*genP256)<<"\n";
+	//if we reach here that means genP256 successfully got checked as belonging to the cuve. Try changing a digit and isBelong assertion would fail
 	std::cout<<"Successfully passed all tests!\n";
 	return 0;
 }

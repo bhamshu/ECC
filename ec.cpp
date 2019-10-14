@@ -4,6 +4,7 @@
 
 #include<gmpxx.h>
 #include<assert.h>
+#include<utility>
 
 typedef long long ll;
 typedef mpz_class mzc;
@@ -268,4 +269,13 @@ EllipticCurve getP256Curve(){  // defined by J. Solinas and D. Fu in [RFC5903]. 
 
 	EllipticCurve curve(fea, feb, fpr);
 	return curve;
+}
+
+std::pair<EllipticCurve, EcElement> getP256CurveAndGenerator(){
+	EllipticCurve curve = getP256Curve();
+	EcElement genP256(
+					mpz_class("6B17D1F2E12C4247F8BCE6E563A440F277037D812DEB33A0F4A13945D898C296", 16),
+					mpz_class("4FE342E2FE1A7F9B8EE7EB4A7C0F9E162BCE33576B315ECECBB6406837BF51F5", 16),
+					curve );
+	return {curve, genP256};		
 }

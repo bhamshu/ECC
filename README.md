@@ -4,15 +4,15 @@ Discrete Logarithm Problem over Elliptic Curves is a computationally hard proble
 
 This library implements operations over finite fields(of prime charecteristic only) and over elliptic curves over finite fields. I have implemented the best\* algorithms known to me for all operations.
 
+**How to use?**  Run either diffie-hellman.cpp or test.cpp. Make sure to use `-lgmpxx -lgmp` flags for GMP. (Example: `g++ diffie-hellman.cpp -Wall -lgmpxx -lgmp && ./a.out`). Docs have not been written but the interfaces can easily be understood from these two files.
+
 **//TODO**
 
 Inheritance is not suitable for this use case. Each `EcElement` stores all the parameters of its curve. This is too much overhead - each point on the curve carries its own curve! Instead, it should just store a pointer to an object of type curve. Fixing this needs overhauling the entire codebase. (I just learned this principle is well understood and is called "Composition over Inheritance".)
 
-Yet to implement Diffie Hellman but it's trivial now with this scaffolding. 
-
 Yet to implement Digital Signatures.
 
-Need to write more tests, thinking of edge case scenario.
+Need to write more tests, thinking of the edge case scenarios.
 
 Need to hard code more in-built curves. Refer http://safecurves.cr.yp.to for this.
 

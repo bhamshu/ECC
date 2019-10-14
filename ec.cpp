@@ -218,16 +218,28 @@ EcElement EcElement::operator+(EcElement ece2){
 	return ret;
 }
 
+//RECURSIVE:
+// template<class T> //int, long, mpz_class etc
+// EcElement operator*(T k, EcElement ece){
+// 	if(k==0){
+// 		return ece.getPointAtInfinity(); 
+// 	}
+// 	EcElement ecesqrt = (k/2)*ece;
+// 	EcElement ret = ecesqrt + ecesqrt;
+// 	if(k%2==1){
+// 		ret = ret + ece;
+// 	} 
+// 	return ret;
+// }
 template<class T> //int, long, mpz_class etc
 EcElement operator*(T k, EcElement ece){
-	if(k==0){
-		return ece.getPointAtInfinity(); 
+	EcElement ret = ece.getPointAtInfinity();
+	for(int i = 8*sizeof(T)-1; i>=0; i--){
+		ret = ret + ret; //double
+		if(k&(1<<i)){
+			ret = ret + ece; //add
+		}
 	}
-	EcElement ecesqrt = (k/2)*ece;
-	EcElement ret = ecesqrt + ecesqrt;
-	if(k%2==1){
-		ret = ret + ece;
-	} 
 	return ret;
 }
 

@@ -8,8 +8,6 @@ This library implements operations over finite fields(of prime charecteristic on
 
 Inheritance is not suitable for this use case. Each `EcElement` stores all the parameters of its curve. This is too much overhead - each point on the curve carries its own curve! Instead, it should just store a pointer to an object of type curve. Fixing this needs overhauling the entire codebase. (I just learned this principle is well understood and is called "Composition over Inheritance".)
 
-Double & Add algorithm (similar to the more common Square & Multiply algorithm for modulo exponentiation) would work a bit faster and take less space than the current recursive algorithm. Need to implement that.
-
 Yet to implement Diffie Hellman but it's trivial now with this scaffolding. 
 
 Yet to implement Digital Signatures.

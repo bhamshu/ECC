@@ -64,7 +64,7 @@ class EcElement : public EllipticCurve{
 		bool isEqual(EcElement ece2) const{
 			assert( p==ece2.getCharacteristic() );
 			assert( a==ece2.getCurveA());
-			assert( b==ece2.getCurveB());
+			assert( b==ece2.getCurveB());	
 			if(this->isPointAtInfinity()&&ece2.isPointAtInfinity())
 				return true;
 			return ece2.getEcElementX() == x 
@@ -231,12 +231,21 @@ EcElement EcElement::operator+(EcElement ece2){
 // 	} 
 // 	return ret;
 // }
+template<typename T>
+size_t custom_sizeof(T k){
+	return sizeof(k)*CHAR_BIT;
+}
+size_t custom_sizeof(mpz_class k){
+	return  mpz_sizeinbase(k.get_mpz_t(), 2);
+}
+
 template<class T> //int, long, mpz_class etc
 EcElement operator*(T k, EcElement ece){
 	EcElement ret = ece.getPointAtInfinity();
-	for(int i = 8*sizeof(T)-1; i>=0; i--){
+	size_t numbits = custom_sizeof(k);
+	for(int i = numbits-1; i>=0; i--){
 		ret = ret + ret; //double
-		if(k&(1<<i)){
+		if( (k&(mzc(1)<<i))!=0){
 			ret = ret + ece; //add
 		}
 	}

@@ -54,8 +54,8 @@ int main(){
 	std::cout<<(P256curve.getCurveA())<<"\n"<<P256curve.getCurveB()<<"\n";
 	EcElement genP256(mpz_class("6B17D1F2E12C4247F8BCE6E563A440F277037D812DEB33A0F4A13945D898C296", 16),	
 						mpz_class("4FE342E2FE1A7F9B8EE7EB4A7C0F9E162BCE33576B315ECECBB6406837BF51F5", 16), P256curve);
-	std::cout<<(9451/*random*/*genP256)<<"\n";
-	//if we reach here that means genP256 successfully got checked as belonging to the cuve. Try changing a digit and isBelong assertion would fail
+	mpz_class order("FFFFFFFF00000000FFFFFFFFFFFFFFFFBCE6FAADA7179E84F3B9CAC2FC632551", 16);
+	assert(order*genP256== P256curve.getPointAtInfinity());
 	std::cout<<"Successfully passed all tests!\n";
 	return 0;
 }

@@ -1,4 +1,3 @@
-// TODO: Use GMP and use 160 bit primes for guaranteeing 128-bit security. Btw !!CAUTION!! in this current version everything is designed to work in 32 bits, so it's not really secure for any real scenario.
 // https://tools.ietf.org/html/rfc6090
 
 //#define DEBUG

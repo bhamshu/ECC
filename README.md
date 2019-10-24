@@ -18,6 +18,8 @@ Need to hard code more in-built curves. Refer http://safecurves.cr.yp.to for thi
 
 Need to add primality tests.
 
+Implement Square and Multiply instead of Recursive for exponentiation in fields. 
+
 \* Best in the sense of asymptotic complexity. Almost everywhere, readability has been given more preference over minor optimizations.
 
 *PS. Feel free to contact me (shubhamdtu20@gmail.com) for support, I'll be glad to help. Please drop a word if you use it to let me know that you found it helpful. By the way, contributions are welcome!*

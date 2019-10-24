@@ -6,8 +6,11 @@
 #include<utility>
 #include <assert.h>
 
+#define watch(x) std::cout<<(#x)<<" is "<<x<<"\n\n";
+
 mpz_class getRandom(){
 	gmp_randclass r(gmp_randinit_default);
+	r.seed(mpz_class(rand())*mpz_class(time(NULL))); // ~60 bit seed
 	mp_bitcnt_t numbits = 256;
 	return r.get_z_bits(numbits);
 }
@@ -20,12 +23,20 @@ int main(){
 	
 	mpz_class AdaSecret = getRandom(); //will be used as a secret key of Ada. No one else knows this.
 	mpz_class CharlesSecret = getRandom();
-
+	
 	EcElement AdaPublic = AdaSecret*p.second; // A_pri*generator. this will be transmitted over the channel (to Charles) and can be seen by Eve.
 	EcElement CharlesPublic = CharlesSecret*p.second; //B_pri*secret*generator. this will be transmitted over the channel(to Alice) and can be seen by Eve.
-	
+
 	EcElement AdaCalculatesSharedSecret = AdaSecret*CharlesPublic;
 	EcElement CharlesCalculatesSharedSecret = CharlesSecret*AdaPublic;
+
+	watch(AdaSecret);
+	watch(AdaPublic);
+	watch(CharlesSecret);
+	watch(CharlesPublic);
+	watch(AdaCalculatesSharedSecret);
+	watch(CharlesCalculatesSharedSecret);
+
 
 	assert(AdaCalculatesSharedSecret == CharlesCalculatesSharedSecret); //now this can be used for symmetric encryption
 
